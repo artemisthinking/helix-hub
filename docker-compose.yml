@@ -1,0 +1,406 @@
+# /home/angel/helix-hub/docker-compose.yml
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["core"]
+
+  moodle:
+    image: bitnami/moodle:latest
+    restart: unless-stopped
+    environment:
+      - MOODLE_DATABASE_TYPE=pgsql
+      - MOODLE_DATABASE_HOST=postgres-moodle
+      - MOODLE_DATABASE_PORT_NUMBER=5432
+      - MOODLE_DATABASE_USER=moodle
+      - MOODLE_DATABASE_PASSWORD=moodlepass
+      - MOODLE_DATABASE_NAME=moodle
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "8083:8080"  # Host port 8083, container port 8080
+    networks:
+      - helix-net
+    volumes:
+      - moodle_data:/bitnami/moodle
+      - moodle_apache:/bitnami/apache
+    depends_on:
+      - postgres-moodle
+    profiles: ["lms"]
+  postgres-moodle:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=moodle
+      - POSTGRES_USER=moodle
+      - POSTGRES_PASSWORD=moodlepass
+    networks:
+      - helix-net
+    volumes:
+      - moodle_db_data:/var/lib/postgresql/data
+    profiles: ["lms"]
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["core"]
+
+  traefik:
+    image: traefik:v2.10
+    command:
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --providers.docker=false
+      - --entryPoints.websecure.address=:8443
+      - --api.dashboard=true
+      - --log.level=INFO
+    ports:
+      - "8443:8443"
+      - "8080:8080"
+    volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ./traefik/certs:/certs:ro
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["security"]
+
+  helix-core:
+    build: ./helix-core
+    image: helix/helix-core:dev
+    environment:
+      - FLASK_ENV=development
+      - APP_HOST=0.0.0.0
+      - APP_PORT=5000
+      - DATABASE_URL=postgresql://helix:helixpass@postgres:5432/helix
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-secret-key}
+      - SFTP_HOST=sftp-demo
+      - SFTP_PORT=22
+      - SFTP_USER=bank
+      - SFTP_PASS=bankpassword
+      - SFTP_REMOTE_DIR=/incoming
+    depends_on:
+      - postgres
+      - sftp-demo
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./helix-core/data:/app/data
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["core"]
+
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: helix
+      POSTGRES_USER: helix
+      POSTGRES_PASSWORD: helixpass
+    volumes:
+      - helix_db_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["core"]
+
+  sftp-demo:
+    image: atmoz/sftp:latest
+    command: bank:bankpassword:1001
+    volumes:
+      - ./sftp/incoming:/home/bank/incoming
+    ports:
+      - "2222:22"
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["banking"]
+
+  n8n:
+    image: n8nio/n8n:1.19.4
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+      - "5679:5679" # HTTPS port if you want to expose it
+    environment:
+      - N8N_HOST=n8n.helix.local
+      - N8N_DEFAULT_CORS_ALLOW_ORIGIN=*
+      - N8N_DEFAULT_ALLOWED_ORIGINS=*
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=admin
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_PROTOCOL=https
+      - GENERIC_TIMEZONE=Europe/Zurich
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./podcast-studio:/podcast-studio:ro
+    networks:
+      - helix-net
+    profiles: ["ai"]
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - helix-net
+    profiles: ["ai"]
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui
+    restart: unless-stopped
+    ports:
+      - "3001:8080"
+    networks:
+      - helix-net
+    volumes:
+      - openwebui_data:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.openwebui.rule=Host(`openwebui.helix.local`)"
+    - "traefik.http.routers.openwebui.entrypoints=websecure"
+    - "traefik.http.services.openwebui.loadbalancer.server.port=8080"
+    - "traefik.http.routers.openwebui.tls=true"
+    profiles: ["ai"]
+
+  # Web-based file manager for SFTP access
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    volumes:
+      - ./sftp/incoming:/srv/sftp:ro
+      - ./helix-core/data:/srv/data
+      - filebrowser_data:/database
+    environment:
+      - FB_DATABASE=/database/database.db
+      - FB_USERNAME=admin
+      - FB_PASSWORD=admin
+    networks:
+      - helix-net
+    profiles: ["banking"]
+
+  # HashiCorp Vault - Secret Management Engine
+  vault:
+    image: hashicorp/vault:1.15.2
+    restart: unless-stopped
+    ports:
+      - "8200:8200"
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=myroot
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+      - VAULT_ADDR=http://127.0.0.1:8200
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault_data:/vault/data
+      - ./vault/config:/vault/config:ro
+      - ./vault/auto-unseal:/vault/auto-unseal:ro
+    networks:
+      - helix-net
+    command: ["vault", "server", "-dev"]
+    profiles: ["security"]
+
+  # Keycloak - Authentication Engine (Threading Through to Vault!)
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:23.0.1
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8081:8080"
+  #   environment:
+  #     - KC_DB=postgres
+  #     - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak_db
+  #     - KC_DB_USERNAME=keycloak_user
+  #     - KC_DB_PASSWORD=keycloak_secure_pass
+  #     - KEYCLOAK_ADMIN=admin
+  #     - KEYCLOAK_ADMIN_PASSWORD=admin123
+  #     - KC_PROXY=edge
+  #     - KC_HOSTNAME=keycloak.helix.local
+  #     - KC_HOSTNAME_STRICT=false
+  #     - KC_HOSTNAME_STRICT_HTTPS=false
+  #     - KC_HTTP_ENABLED=true
+  #     - KC_PROXY_ADDRESS_FORWARDING=true
+  #     - KC_HEALTH_ENABLED=true
+  #   volumes:
+  #     - keycloak_data:/opt/keycloak/data
+  #     - ./keycloak/realms:/opt/keycloak/data/import:ro
+  #   networks:
+  #     - helix-net
+  #   depends_on:
+  #     - postgres
+   #     - vault
+  #   command: ["start-dev", "--import-realm"]
+  #   profiles: ["security"]
+
+  # 🚀 ENTERPRISE ADDITIONS - Phase 1: Foundation
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: helix-portainer
+    ports:
+      - "9443:9443"
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - helix-net
+    restart: unless-stopped
+  # Remove the command line entirely!
+    # Default admin password: helixadmin123 (change after first login)
+    profiles: ["monitoring", "security"]
+
+  # 🚀 ENTERPRISE ADDITIONS - Phase 2A: Observability Stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: helix-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["monitoring"]
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: helix-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=helixadmin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - helix-net
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    profiles: ["monitoring"]
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: helix-node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - helix-net
+    restart: unless-stopped
+    profiles: ["monitoring"]
+
+  # 🚀 ENTERPRISE ADDITIONS - Phase 2B: Performance Beast
+  redis:
+    image: redis:7-alpine
+    container_name: helix-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass helixredis123
+    volumes:
+      - redis_data:/data
+    networks:
+      - helix-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "helixredis123", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles: ["ai"]
+
+  # 🦍 KONG API GATEWAY - Marcel's Enterprise Magic
+  # kong:
+  #   image: kong:latest
+  #   container_name: helix-kong
+  #   environment:
+  #     - KONG_DATABASE=off
+  #     - KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml
+  #     - KONG_PROXY_ACCESS_LOG=/dev/stdout
+  #     - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+  #     - KONG_PROXY_ERROR_LOG=/dev/stderr
+  #     - KONG_ADMIN_ERROR_LOG=/dev/stderr
+  #     - KONG_ADMIN_LISTEN=0.0.0.0:8001
+  #     - KONG_PROXY_LISTEN=0.0.0.0:8000
+  #   ports:
+  #     - "8003:8000"
+  #     - "8001:8001"
+  #   volumes:
+  #     - kong_data:/kong/declarative
+  #   networks:
+  #     - helix-net
+  #   restart: unless-stopped
+
+  #   healthcheck:
+  #     test: ["CMD", "kong", "health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+
+volumes:
+  openwebui_data:
+  helix_db_data:
+  n8n_data:
+  ollama_data:
+  filebrowser_data:
+  vault_data:
+  keycloak_data:
+  portainer_data:
+  prometheus_data:
+  grafana_data:
+  redis_data:
+  # kong_data:
+  moodle_db_data:
+  moodle_data:
+  moodle_apache:
+
+networks:
+  helix-net:
+    driver: bridge

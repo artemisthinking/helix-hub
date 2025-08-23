@@ -1,0 +1,27 @@
+# Ignore SSH keys and sensitive certs
+DO_Keys
+DO_Keys.pub
+*.pem
+*.key
+
+# Ignore Docker volumes and logs
+logs/
+*.log
+
+# Ignore system files
+*.swp
+*.swo
+*.bak
+
+# Ignore editor/IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore environment files
+.env
+*.env

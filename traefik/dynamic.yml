@@ -1,0 +1,125 @@
+http:
+  routers:
+    moodle:
+      rule: "Host(`moodle.helix.local`)"
+      service: moodle
+      entryPoints:
+        - websecure
+      tls: {}
+    keycloak-router:
+      rule: "Host(`keycloak.helix.local`)"
+      entryPoints:
+        - websecure
+      service: keycloak-service
+      tls: {}
+    n8n-router:
+      rule: "Host(`n8n.helix.local`)"
+      entryPoints:
+        - websecure
+      service: n8n-service
+      tls: {}
+    vault:
+      rule: "Host(`vault.helix.local`)"
+      entryPoints:
+        - websecure
+      service: vault-service
+      tls: {}
+    helix-router:
+      rule: "Host(`helix.local`)"
+      entryPoints:
+        - websecure
+      service: helix-service
+      tls: {}
+    traefik-router:
+      rule: "Host(`traefik.helix.local`)"
+      entryPoints:
+        - websecure
+      service: api@internal
+      tls: {}
+    ollama-router:
+      rule: "Host(`ollama.helix.local`)"
+      entryPoints:
+        - websecure
+      service: ollama-service
+      tls: {}
+    files-router:
+      rule: "Host(`files.helix.local`)"
+      entryPoints:
+        - websecure
+      service: files-service
+      tls: {}
+    sftp-router:
+      rule: "Host(`sftp.helix.local`)"
+      entryPoints:
+        - websecure
+      service: files-service
+      tls: {}
+    prometheus-router:
+      rule: "Host(`prometheus.helix.local`)"
+      entryPoints:
+        - websecure
+      service: prometheus-service
+      tls: {}
+    grafana-router:
+      rule: "Host(`grafana.helix.local`)"
+      entryPoints:
+        - websecure
+      service: grafana-service
+      tls: {}
+
+    openwebui-router:
+      rule: "Host(`openwebui.helix.local`)"
+      entryPoints:
+        - websecure
+      service: openwebui-service
+      tls: {}
+
+  services:
+    moodle:
+      loadBalancer:
+        servers:
+          - url: "http://moodle:8080"
+    openwebui-service:
+      loadBalancer:
+        servers:
+          - url: "http://openwebui:8080"
+    helix-service:
+      loadBalancer:
+        servers:
+          - url: "http://helix-core:5000"
+    ollama-service:
+      loadBalancer:
+        servers:
+          - url: "http://ollama:11434"
+    files-service:
+      loadBalancer:
+        servers:
+          - url: "http://filebrowser:80"
+    sftp-service:
+      loadBalancer:
+        servers:
+          - url: "http://sftp-demo:22"
+    keycloak-service:
+      loadBalancer:
+        servers:
+          - url: "http://keycloak:8080"
+    n8n-service:
+      loadBalancer:
+        servers:
+          - url: "http://n8n:5678"
+    vault-service:
+      loadBalancer:
+        servers:
+          - url: "http://vault:8200"
+    traefik-service:
+      loadBalancer:
+        servers:
+          - url: "http://traefik:8080"
+    prometheus-service:
+      loadBalancer:
+        servers:
+          - url: "http://prometheus:9090"
+    grafana-service:
+      loadBalancer:
+        servers:
+          - url: "http://grafana:3000"
