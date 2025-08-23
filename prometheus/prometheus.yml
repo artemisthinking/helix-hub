@@ -1,0 +1,62 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter - System metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # Flask App - FaaF Academy & Helix Core
+  - job_name: 'helix-core'
+    static_configs:
+      - targets: ['helix-core:5000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Traefik Metrics
+  - job_name: 'traefik'
+    static_configs:
+      - targets: ['traefik:8080']
+    metrics_path: '/metrics'
+
+  # PostgreSQL Metrics (if postgres_exporter added)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    scrape_interval: 30s
+
+  # Docker containers via cAdvisor (optional)
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+
+  # Keycloak metrics (if enabled)
+  - job_name: 'keycloak'
+    static_configs:
+      - targets: ['keycloak:8080']
+    metrics_path: '/auth/realms/master/metrics'
+    scrape_interval: 60s
+
+  # n8n metrics (if available)
+  - job_name: 'n8n'
+    static_configs:
+      - targets: ['n8n:5678']
+    scrape_interval: 60s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
