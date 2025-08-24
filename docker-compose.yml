@@ -14,6 +14,8 @@ services:
 
   moodle:
     image: bitnami/moodle:latest
+    mem_limit: 512m
+    cpus: 0.5
     restart: unless-stopped
     environment:
       - MOODLE_DATABASE_TYPE=pgsql

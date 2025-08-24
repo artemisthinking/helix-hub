@@ -74,6 +74,13 @@ http:
       service: openwebui-service
       tls: {}
 
+    portainer-router:
+      rule: "Host(`portainer.helix.local`)"
+      entryPoints:
+        - websecure
+      service: portainer-service
+      tls: {}
+
   services:
     moodle:
       loadBalancer:
@@ -123,3 +130,7 @@ http:
       loadBalancer:
         servers:
           - url: "http://grafana:3000"
+    portainer-service:
+      loadBalancer:
+        servers:
+          - url: "http://portainer:8000"
