@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="card-header">
+        <h3>📋 Live Activity Feed</h3>
+        <div class="flex items-center gap-2">
+            <span class="status-dot" style="background: var(--success-green);"></span>
+            <span>Real-time monitoring</span>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <div class="activity-feed" id="activityFeed">
+            {% for activity in activities[:10] %}
+            <div class="activity-item">
+                <div class="activity-icon">{{ activity.emoji or 'ℹ️' }}</div>
+                <div class="activity-content">
+                    <div class="activity-message">{{ activity.message }}</div>
+                    <div class="activity-time">{{ activity.timestamp | timeago }}</div>
+                </div>
+            </div>
+            {% else %}
+            <div class="activity-item">
+                <div class="activity-icon">🌟</div>
+                <div class="activity-content">
+                    <div class="activity-message">System initialized - Ready for Swiss-precision processing!</div>
+                    <div class="activity-time">Just now</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="card-footer">
+        <div class="flex justify-between items-center">
+            <button class="btn btn-secondary" onclick="refreshActivityFeed()">
+                🔄 Refresh
+            </button>
+            <button class="btn btn-secondary" onclick="exportActivityLog()">
+                📤 Export Log
+            </button>
+        </div>
+    </div>
+</div>

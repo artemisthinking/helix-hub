@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎛️ Helix Bank File Processing Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .dashboard {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-grid {
+            grid-column: span 3;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .activity-log {
+            grid-column: span 2;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .activity-item.success {
+            border-left-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .activity-item.error {
+            border-left-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .activity-emoji {
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #666;
+            margin-left: auto;
+        }
+
+        .sftp-status {
+            grid-column: span 1;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-connected {
+            background: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .status-error {
+            background: #f44336;
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+
+        .status-unknown {
+            background: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+        }
+
+        .processing-files {
+            grid-column: span 3;
+        }
+
+        .processing-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .processing-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .processing-emoji {
+            font-size: 1.5rem;
+        }
+
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .chart-container {
+            grid-column: span 2;
+            position: relative;
+            height: 300px;
+        }
+
+        .file-types {
+            grid-column: span 1;
+        }
+
+        .file-type-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .file-type-emoji {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .refresh-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .refresh-indicator.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-grid {
+                grid-column: span 2;
+            }
+            .processing-files {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            .stats-grid {
+                grid-column: span 1;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .processing-files,
+            .activity-log,
+            .chart-container {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎛️ Helix Bank File Processing Dashboard</h1>
+        <div class="subtitle">Real-time monitoring of multi-format bank file processing • Swiss precision guaranteed! 🇨🇭</div>
+    </div>
+
+    <div class="refresh-indicator" id="refreshIndicator">
+        🔄 Refreshing data...
+    </div>
+
+    <div class="dashboard">
+        <!-- Statistics Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalFiles">0</div>
+                <div class="stat-label">📁 Files Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalTransactions">0</div>
+                <div class="stat-label">💰 Transactions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAmount">$0</div>
+                <div class="stat-label">💵 Total Amount</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgProcessingTime">0ms</div>
+                <div class="stat-label">⚡ Avg Processing</div>
+            </div>
+        </div>
+
+        <!-- Currently Processing Files -->
+        <div class="card processing-files">
+            <h3>🔄 Currently Processing</h3>
+            <div id="currentProcessing">
+                <div style="text-align: center; color: #666; padding: 2rem;">
+                    😴 No files currently being processed
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Log -->
+        <div class="card activity-log">
+            <h3>📋 Recent Activity</h3>
+            <div id="activityLog">
+                <div style="text-align: center; color: #666; padding: 2rem;">
+                    🔍 Loading activities...
+                </div>
+            </div>
+        </div>
+
+        <!-- SFTP Status -->
+        <div class="card sftp-status">
+            <h3>🔗 SFTP Status</h3>
+            <div id="sftpStatus">
+                <p><span class="status-indicator status-unknown"></span>Connection: <span id="connectionStatus">Unknown</span></p>
+                <p>📊 Poll Count: <span id="pollCount">0</span></p>
+                <p>📁 Files Found: <span id="filesFound">0</span></p>
+                <p>⏰ Last Poll: <span id="lastPoll">Never</span></p>
+            </div>
+        </div>
+
+        <!-- Processing Chart -->
+        <div class="card chart-container">
+            <h3>📈 Processing Timeline</h3>
+            <canvas id="processingChart"></canvas>
+        </div>
+
+        <!-- File Types Breakdown -->
+        <div class="card file-types">
+            <h3>📊 File Types</h3>
+            <div id="fileTypes">
+                <div style="text-align: center; color: #666; padding: 2rem;">
+                    📄 No files processed yet
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let processingChart;
+        let refreshInterval;
+
+        // File type emoji mapping
+        const fileTypeEmojis = {
+            'MT940': '💰',
+            'CAMT.053': '💼', 
+            'BAI2': '🏛️',
+            'CSV': '📊'
+        };
+
+        function initChart() {
+            const ctx = document.getElementById('processingChart').getContext('2d');
+            processingChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Files Processed',
+                        data: [],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(102, 126, 234, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(102, 126, 234, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function showRefreshIndicator() {
+            const indicator = document.getElementById('refreshIndicator');
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 1000);
+        }
+
+        function updateDashboard() {
+            showRefreshIndicator();
+            
+            fetch('/api/dashboard-data')
+                .then(response => response.json())
+                .then(data => {
+                    updateStats(data.processing_stats);
+                    updateCurrentProcessing(data.current_processing);
+                    updateActivityLog(data.recent_activities);
+                    updateSftpStatus(data.sftp_status);
+                    updateFileTypes(data.processing_stats.files_by_type);
+                    updateChart(data.processing_stats.hourly_stats);
+                })
+                .catch(error => {
+                    console.error('Error fetching dashboard data:', error);
+                });
+        }
+
+        function updateStats(stats) {
+            document.getElementById('totalFiles').textContent = stats.total_files_processed || 0;
+            document.getElementById('totalTransactions').textContent = stats.total_transactions || 0;
+            document.getElementById('totalAmount').textContent = '$' + (stats.total_amount || 0).toFixed(2);
+            
+            const avgTime = stats.processing_times && stats.processing_times.length > 0 
+                ? stats.processing_times.reduce((a, b) => a + b, 0) / stats.processing_times.length 
+                : 0;
+            document.getElementById('avgProcessingTime').textContent = avgTime.toFixed(0) + 'ms';
+        }
+
+        function updateCurrentProcessing(processing) {
+            const container = document.getElementById('currentProcessing');
+            
+            if (Object.keys(processing).length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 2rem;">😴 No files currently being processed</div>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(processing).map(([filename, info]) => `
+                <div class="processing-item">
+                    <div class="processing-info">
+                        <span class="processing-emoji">${info.emoji}</span>
+                        <div>
+                            <strong>${filename}</strong><br>
+                            <small>${info.file_type} • ${info.status}</small>
+                        </div>
+                    </div>
+                    <div class="spinner"></div>
+                </div>
+            `).join('');
+        }
+
+        function updateActivityLog(activities) {
+            const container = document.getElementById('activityLog');
+            
+            if (!activities || activities.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 2rem;">📝 No recent activities</div>';
+                return;
+            }
+
+            container.innerHTML = activities.slice(-10).reverse().map(activity => `
+                <div class="activity-item ${activity.level}">
+                    <span class="activity-emoji">${activity.emoji}</span>
+                    <span class="activity-message">${activity.message}</span>
+                    <span class="activity-time">${new Date(activity.timestamp).toLocaleTimeString()}</span>
+                </div>
+            `).join('');
+        }
+
+        function updateSftpStatus(status) {
+            const statusElement = document.getElementById('connectionStatus');
+            const indicator = statusElement.previousElementSibling;
+            
+            statusElement.textContent = status.connection_status || 'Unknown';
+            
+            // Update status indicator
+            indicator.className = 'status-indicator ';
+            if (status.connection_status === 'Connected') {
+                indicator.className += 'status-connected';
+            } else if (status.connection_status === 'Error') {
+                indicator.className += 'status-error';
+            } else {
+                indicator.className += 'status-unknown';
+            }
+
+            document.getElementById('pollCount').textContent = status.poll_count || 0;
+            document.getElementById('filesFound').textContent = status.files_found || 0;
+            
+            const lastPoll = status.last_poll ? new Date(status.last_poll).toLocaleTimeString() : 'Never';
+            document.getElementById('lastPoll').textContent = lastPoll;
+        }
+
+        function updateFileTypes(filesByType) {
+            const container = document.getElementById('fileTypes');
+            
+            if (!filesByType || Object.keys(filesByType).length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 2rem;">📄 No files processed yet</div>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(filesByType).map(([type, count]) => `
+                <div class="file-type-item">
+                    <span>
+                        <span class="file-type-emoji">${fileTypeEmojis[type] || '📄'}</span>
+                        ${type}
+                    </span>
+                    <strong>${count}</strong>
+                </div>
+            `).join('');
+        }
+
+        function updateChart(hourlyStats) {
+            if (!processingChart || !hourlyStats) return;
+
+            const hours = Object.keys(hourlyStats).sort().slice(-12); // Last 12 hours
+            const files = hours.map(hour => hourlyStats[hour].files);
+
+            processingChart.data.labels = hours.map(hour => {
+                const date = new Date(hour);
+                return date.getHours() + ':00';
+            });
+            processingChart.data.datasets[0].data = files;
+            processingChart.update('none');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            updateDashboard();
+            
+            // Auto-refresh every 2 seconds
+            refreshInterval = setInterval(updateDashboard, 2000);
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

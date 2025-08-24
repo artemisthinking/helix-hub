@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'base/head.html' %}
+<body>
+    {% include 'base/header.html' %}
+    
+    <main class="main-content">
+        {% block content %}
+        <!-- Page content goes here -->
+        {% endblock %}
+    </main>
+    
+    {% include 'base/footer.html' %}
+    {% include 'base/scripts.html' %}
+    
+    {% block page_scripts %}
+    <!-- Page-specific scripts go here -->
+    {% endblock %}
+</body>
+</html>

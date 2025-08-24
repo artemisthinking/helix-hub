@@ -1,0 +1,88 @@
+<section id="upload" class="upload-section">
+    <div class="upload-header">
+        <h3>📤 Enterprise File Upload</h3>
+        <p>Swiss-precision multi-file upload with intelligent routing</p>
+    </div>
+    
+    <div class="upload-body">
+        <!-- Routing Selector -->
+        <div class="routing-selector">
+            <div class="form-group">
+                <label class="form-label">🏢 Department</label>
+                <select class="form-select" id="departmentSelect" required>
+                    <option value="">Select Department...</option>
+                    <option value="FINANCE">💰 Finance</option>
+                    <option value="TREASURY">💎 Treasury</option>
+                    <option value="RISK">⚖️ Risk Management</option>
+                    <option value="COMPLIANCE">📋 Compliance</option>
+                    <option value="OPERATIONS">⚙️ Operations</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">⚙️ Process</label>
+                <select class="form-select" id="processSelect" required disabled>
+                    <option value="">Select Process...</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">📄 File Type</label>
+                <select class="form-select" id="fileTypeSelect" required disabled>
+                    <option value="">Select File Type...</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Priority & Notes -->
+        <div class="routing-selector" style="grid-template-columns: 1fr 2fr;">
+            <div class="form-group">
+                <label class="form-label">🎯 Priority</label>
+                <select class="form-select" id="prioritySelect">
+                    <option value="NORMAL">Normal</option>
+                    <option value="HIGH">High</option>
+                    <option value="URGENT">🚨 Urgent</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">📝 Notes (Optional)</label>
+                <input type="text" class="form-input" id="uploadNotes" placeholder="Processing notes or instructions...">
+            </div>
+        </div>
+        
+        <!-- File Upload Area -->
+        <div class="file-upload-area" id="fileUploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">
+                <strong>Drop files here</strong> or <strong>click to browse</strong><br>
+                Multiple files supported
+            </div>
+            <div class="file-types">
+                Supported: MT940, CAMT.053, BAI2, CSV, XML, TXT
+            </div>
+            <input type="file" class="file-input" id="fileInput" multiple accept=".mt940,.xml,.bai,.bai2,.csv,.txt">
+        </div>
+        
+        <!-- Upload Controls -->
+        <div class="flex justify-between items-center mt-4">
+            <div class="flex gap-2">
+                <button type="button" class="btn btn-secondary" id="clearFilesBtn" disabled>
+                    🗑️ Clear All
+                </button>
+                <button type="button" class="btn btn-secondary" id="validateBtn" disabled>
+                    ✅ Validate Files
+                </button>
+            </div>
+            <button type="button" class="btn btn-primary" id="uploadBtn" disabled>
+                🚀 Upload & Process
+            </button>
+        </div>
+        
+        <!-- File Queue -->
+        <div class="file-queue" id="fileQueue" style="display: none;">
+            <h4>📋 Upload Queue</h4>
+            <div id="fileList"></div>
+        </div>
+    </div>
+</section>

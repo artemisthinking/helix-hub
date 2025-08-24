@@ -1,0 +1,28 @@
+<header class="header">
+    <div class="header-content">
+        <div class="header-brand">
+            <h1>🎛️ Helix Enterprise File Processing</h1>
+            <p class="subtitle">🇨🇭 Swiss-Precision Banking Operations Dashboard</p>
+        </div>
+        
+        <nav class="header-nav">
+            <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                📊 Dashboard
+            </a>
+            <a href="{{ url_for('dashboard') }}#upload" class="nav-link">
+                📤 Upload Files
+            </a>
+            <a href="{{ url_for('dashboard') }}#monitoring" class="nav-link">
+                🔍 Monitoring
+            </a>
+        </nav>
+        
+        <div class="header-status">
+            <div class="status-indicator online" id="connectionStatus">
+                <span class="status-dot"></span>
+                <span class="status-text">Online</span>
+            </div>
+            <div class="current-time" id="currentTime"></div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helix Hub Wins & Wrecks</title>
+  <link rel="stylesheet" href="/static/css/base.css">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; color: #222; margin: 0; }
+    .container { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #0001; padding: 2rem; }
+    h1 { text-align: center; font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .intro { text-align: center; margin-bottom: 2rem; font-size: 1.2rem; color: #555; }
+    .story { border-bottom: 1px solid #eee; padding: 1.5rem 0; }
+    .service { font-size: 1.3rem; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; }
+    .horror { color: #c0392b; margin: 0.5rem 0; }
+    .win { color: #27ae60; margin: 0.5rem 0; }
+    .tip { color: #2980b9; font-style: italic; margin: 0.5rem 0; }
+    .link { margin: 0.5rem 0; }
+    .actions { margin-top: 1rem; display: flex; align-items: center; gap: 1.5rem; }
+    .thumb, .star { cursor: pointer; font-size: 1.5rem; transition: transform 0.1s; }
+    .thumb:hover, .star:hover { transform: scale(1.2); }
+    .score { font-size: 1.1rem; color: #888; margin-left: 0.5rem; }
+    .login-msg { color: #888; font-size: 0.95rem; margin-top: 0.5rem; }
+    .credits { text-align: center; margin-top: 2rem; color: #666; font-size: 1rem; }
+    .badge { background: #ffe066; color: #222; border-radius: 6px; padding: 0.2rem 0.7rem; margin-left: 0.5rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Helix Hub Wins & Wrecks</h1>
+    <div class="intro">
+      Real stories from the trenches—horror, heroics, and how Helix Hub saves the day. Rate your favorites, share your own, and earn your badge!
+    </div>
+
+    <!-- Story Example: Kong API Gateway -->
+    <div class="story" id="kong">
+      <div class="service">🦍 Kong API Gateway</div>
+      <div class="horror"><strong>Wreck:</strong> "No mTLS, $500K breach!"<br>One company skipped mutual TLS and paid the price—massive data leak, regulatory fines, and a year of cleanup.</div>
+      <div class="win"><strong>Win:</strong> Helix Kong ships with mTLS by default. $5/month, zero breaches, total peace of mind.</div>
+      <div class="tip">Tip: Always enable mTLS for APIs. Helix makes it one click.</div>
+      <div class="link">
+        <a href="https://docs.konghq.com/" target="_blank">Kong Docs</a> |
+        <a href="https://localhost:8001" target="_blank">Try Kong Live</a> (login required)
+      </div>
+      <div class="actions">
+        <span class="thumb" onclick="vote('kong','up')">👍</span>
+        <span class="thumb" onclick="vote('kong','down')">👎</span>
+        <span class="score" id="score-kong">0</span>
+        <span class="star" onclick="rate('kong',1)">★</span>
+        <span class="star" onclick="rate('kong',2)">★</span>
+        <span class="star" onclick="rate('kong',3)">★</span>
+        <span class="star" onclick="rate('kong',4)">★</span>
+        <span class="star" onclick="rate('kong',5)">★</span>
+        <span class="score" id="stars-kong">0</span>
+      </div>
+      <div class="login-msg">Log in to rate and earn your badge!</div>
+    </div>
+
+    <!-- Story Example: n8n Automation -->
+    <div class="story" id="n8n">
+      <div class="service">🚅 n8n Automation</div>
+      <div class="horror"><strong>Wreck:</strong> "Infinite Loop Nightmare"<br>Someone set up a workflow that looped forever—100,000 emails sent, server crashed, boss not happy.</div>
+      <div class="win"><strong>Win:</strong> Helix n8n has built-in loop protection and workflow previews. No more accidental spam!</div>
+      <div class="tip">Tip: Always test workflows with sample data first.</div>
+      <div class="link">
+        <a href="https://n8n.io/docs" target="_blank">n8n Docs</a> |
+        <a href="https://localhost:5678" target="_blank">Try n8n Live</a> (login required)
+      </div>
+      <div class="actions">
+        <span class="thumb" onclick="vote('n8n','up')">👍</span>
+        <span class="thumb" onclick="vote('n8n','down')">👎</span>
+        <span class="score" id="score-n8n">0</span>
+        <span class="star" onclick="rate('n8n',1)">★</span>
+        <span class="star" onclick="rate('n8n',2)">★</span>
+        <span class="star" onclick="rate('n8n',3)">★</span>
+        <span class="star" onclick="rate('n8n',4)">★</span>
+        <span class="star" onclick="rate('n8n',5)">★</span>
+        <span class="score" id="stars-n8n">0</span>
+      </div>
+      <div class="login-msg">Log in to rate and earn your badge!</div>
+    </div>
+
+    <!-- Add more stories for each service here... -->
+
+    <div class="credits">
+      <a href="https://localhost:5000/enterprise" style="background:#ffe066;color:#222;border-radius:6px;padding:0.3rem 1rem;font-weight:bold;text-decoration:none;">🏢 Back to Enterprise Cockpit</a><br>
+      Got a story? <a href="mailto:helixhub@yourdomain.com">Send it in!</a>
+    </div>
+  </div>
+  <script>
+    // Simple JS stubs for voting/rating (replace with backend integration)
+    function vote(id, type) {
+      var score = document.getElementById('score-' + id);
+      var val = parseInt(score.textContent);
+      score.textContent = type === 'up' ? val + 1 : val - 1;
+    }
+    function rate(id, stars) {
+      var score = document.getElementById('stars-' + id);
+      score.textContent = stars;
+    }
+  </script>
+</body>
+</html>

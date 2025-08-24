@@ -1,0 +1,82 @@
+<!-- Common JavaScript for all pages -->
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+<script>
+// Global utilities and common functionality
+$(document).ready(function() {
+    // Update current time in header
+    function updateTime() {
+        const now = new Date();
+        $('#currentTime').text(now.toLocaleTimeString());
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+    
+    // Connection status monitoring
+    function checkConnectionStatus() {
+        fetch('/api/health')
+            .then(response => {
+                const statusElement = $('#connectionStatus');
+                if (response.ok) {
+                    statusElement.removeClass('offline').addClass('online');
+                    statusElement.find('.status-text').text('Online');
+                } else {
+                    statusElement.removeClass('online').addClass('offline');
+                    statusElement.find('.status-text').text('Offline');
+                }
+            })
+            .catch(() => {
+                const statusElement = $('#connectionStatus');
+                statusElement.removeClass('online').addClass('offline');
+                statusElement.find('.status-text').text('Offline');
+            });
+    }
+    
+    // Check connection every 30 seconds
+    checkConnectionStatus();
+    setInterval(checkConnectionStatus, 30000);
+    
+    // Smooth scrolling for anchor links
+    $('a[href^="#"]').on('click', function(e) {
+        e.preventDefault();
+        const target = $(this.getAttribute('href'));
+        if (target.length) {
+            $('html, body').animate({
+                scrollTop: target.offset().top - 80
+            }, 500);
+        }
+    });
+});
+
+// Global utility functions
+function showNotification(message, type = 'info') {
+    const notification = $(`
+        <div class="notification notification-${type}">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close">&times;</button>
+        </div>
+    `);
+    
+    $('body').append(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.fadeOut(() => notification.remove());
+    }, 5000);
+    
+    // Remove on click
+    notification.find('.notification-close').on('click', () => {
+        notification.fadeOut(() => notification.remove());
+    });
+}
+
+function downloadLogs() {
+    showNotification('📋 Preparing log export...', 'info');
+    // Implementation for log export
+}
+
+function showSystemInfo() {
+    showNotification('ℹ️ System information panel coming soon!', 'info');
+    // Implementation for system info modal
+}
+</script>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FaaF Academy - AI Fails, You Win!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; }
+        
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 80px 20px; }
+        .hero h1 { font-size: 3em; margin-bottom: 20px; }
+        .hero p { font-size: 1.3em; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        
+        .cta-button { background: #ff6b6b; color: white; padding: 20px 40px; font-size: 1.2em; border: none; border-radius: 50px; cursor: pointer; text-decoration: none; display: inline-block; margin: 10px; }
+        .cta-button:hover { background: #ff5252; transform: translateY(-2px); }
+        
+        .features { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+        .features h2 { text-align: center; font-size: 2.5em; margin-bottom: 60px; color: #333; }
+        
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .feature { text-align: center; padding: 30px; background: #f8f9fa; border-radius: 15px; }
+        .feature-icon { font-size: 3em; margin-bottom: 20px; }
+        .feature h3 { font-size: 1.5em; margin-bottom: 15px; color: #333; }
+        .feature p { color: #666; }
+        
+        .pricing { background: #f8f9fa; padding: 80px 20px; text-align: center; }
+        .pricing h2 { font-size: 2.5em; margin-bottom: 40px; color: #333; }
+        
+        .price-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 800px; margin: 0 auto; }
+        .price-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .price-card.featured { border: 3px solid #667eea; transform: scale(1.05); }
+        .price { font-size: 3em; color: #667eea; font-weight: bold; }
+        .price-period { color: #666; font-size: 0.8em; }
+        
+        .demo-section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .demo-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 40px 0; }
+        .demo-btn { background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; padding: 20px; border: none; border-radius: 10px; cursor: pointer; font-size: 1.1em; }
+        .demo-btn:hover { background: linear-gradient(135deg, #0984e3, #74b9ff); }
+        
+        .output-preview { width: 100%; height: 500px; border: 2px solid #ddd; border-radius: 10px; margin: 20px 0; }
+        
+        .footer { background: #333; color: white; text-align: center; padding: 40px 20px; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2em; }
+            .price-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>🎪 FaaF Academy</h1>
+        <p>When AI fails, you win! Get personalized career coaching that works 100% of the time. No complex forms, no waiting for AI responses - just instant, actionable career advice.</p>
+        <a href="#demo" class="cta-button">Try Free Demo</a>
+        <a href="/coffee" class="cta-button" style="background: #8B4513;">☕ Coffee Packages $5+</a>
+        <a href="#pricing" class="cta-button">Get Premium $29/mo</a>
+    </section>
+
+    <section class="features">
+        <h2>Why FaaF Academy Works</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Always Works</h3>
+                <p>No AI breakdowns, no server timeouts. Our system generates personalized career advice instantly, every time.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>Personalized Templates</h3>
+                <p>7 different career scenarios: Executive, Young Professional, Career Transition, Tech, Finance, Healthcare, and more.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📚</div>
+                <h3>Rich Resources</h3>
+                <p>Each template includes 10+ curated career resources, industry-specific advice, and actionable next steps.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💼</div>
+                <h3>Business Ready</h3>
+                <p>Professional HTML output perfect for sharing on LinkedIn, downloading as PDF, or using in presentations.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <h3>Viral Content</h3>
+                <p>Turn career setbacks into shareable content. Perfect for building your professional brand on social media.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎪</div>
+                <h3>Failure as Feature</h3>
+                <p>Revolutionary approach: when technology fails, we turn it into motivational career coaching. Unique in the market!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="demo-section">
+        <h2>🎯 Try It Now - Free Demo</h2>
+        <p>Click any scenario below to see FaaF Academy in action:</p>
+        
+        <div class="demo-buttons">
+            <button class="demo-btn" onclick="testScenario('executive')">👩‍💼 Female Executive</button>
+            <button class="demo-btn" onclick="testScenario('young')">🎓 Young Professional</button>
+            <button class="demo-btn" onclick="testScenario('transition')">🎯 Career Transition</button>
+            <button class="demo-btn" onclick="testScenario('tech')">💻 Tech Professional</button>
+            <button class="demo-btn" onclick="testScenario('finance')">💰 Finance Professional</button>
+            <button class="demo-btn" onclick="testScenario('chuck')">🎪 Chuck Academy</button>
+        </div>
+        
+        <iframe id="demoOutput" class="output-preview" src="about:blank"></iframe>
+        <div id="demoStatus">Choose a scenario above to see instant career coaching in action!</div>
+    </section>
+
+    <section id="pricing" class="pricing">
+        <h2>Simple Pricing</h2>
+        <div class="price-cards">
+            <div class="price-card">
+                <h3>Free</h3>
+                <div class="price">$0<span class="price-period">/month</span></div>
+                <ul style="text-align: left; margin: 20px 0;">
+                    <li>✅ Chuck Academy template</li>
+                    <li>✅ Basic career advice</li>
+                    <li>✅ 5 uses per month</li>
+                    <li>❌ Premium templates</li>
+                    <li>❌ PDF downloads</li>
+                </ul>
+                <a href="#demo" class="cta-button">Try Free</a>
+            </div>
+            
+            <div class="price-card featured">
+                <h3>Premium</h3>
+                <div class="price">$29<span class="price-period">/month</span></div>
+                <ul style="text-align: left; margin: 20px 0;">
+                    <li>✅ All 7 career templates</li>
+                    <li>✅ Unlimited usage</li>
+                    <li>✅ PDF downloads</li>
+                    <li>✅ Social media sharing</li>
+                    <li>✅ Priority support</li>
+                </ul>
+                <a href="https://buy.stripe.com/test_123" class="cta-button">Start Premium</a>
+            </div>
+        </div>
+        
+        <p style="margin-top: 40px; color: #666;">Need team access? <a href="mailto:hello@faafacademy.com">Contact us</a> for business pricing starting at $200/month.</p>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 FaaF Academy. Built with ❤️ for professionals who refuse to let tech failures stop their success.</p>
+        <p>Made by <a href="https://twitter.com/yourusername" style="color: #74b9ff;">@yourusername</a> | <a href="mailto:hello@faafacademy.com" style="color: #74b9ff;">Contact</a></p>
+    </footer>
+
+    <script>
+        const scenarios = {
+            executive: {
+                name: "Sarah Johnson",
+                email: "sarah@executive.com", 
+                profile_text: "She is a senior executive with 15 years of leadership experience in technology",
+                job_description: "Chief Technology Officer",
+                prompt_type: "general"
+            },
+            young: {
+                name: "Alex Thompson",
+                email: "alex@startup.com",
+                profile_text: "Recent graduate intern at tech startup with computer science degree",
+                job_description: "Junior Software Developer",
+                prompt_type: "general"
+            },
+            transition: {
+                name: "Mike Rodriguez",
+                email: "mike@transition.com",
+                profile_text: "Looking for career change from finance to technology sector",
+                job_description: "Exploring new opportunities in tech",
+                prompt_type: "general"
+            },
+            tech: {
+                name: "Jordan Kim",
+                email: "jordan@techcorp.com",
+                profile_text: "Software engineer with expertise in cloud architecture and microservices",
+                job_description: "Senior Software Engineer",
+                prompt_type: "general"
+            },
+            finance: {
+                name: "Maria Santos",
+                email: "maria@finance.com",
+                profile_text: "Investment banking professional with portfolio management experience",
+                job_description: "Investment Banker",
+                prompt_type: "general"
+            },
+            chuck: {
+                name: "Chuck Norris",
+                email: "chuck@roundhouse.com",
+                profile_text: "Legendary martial artist and ultimate fighter",
+                job_description: "Ultimate Fighter",
+                prompt_type: "general"
+            }
+        };
+
+    // Chuck-style: Only use secure HTTPS endpoint for n8n workflow
+    const URL_n8n_WF = 'https://n8n.helix.local:8443/webhook/PROD_n8n-base-sanity-check';
+
+        function testScenario(type) {
+            const status = document.getElementById('demoStatus');
+            status.textContent = `Testing sanity check...`;
+
+            fetch(URL_n8n_WF, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+                // For the basic sanity check, no body is needed
+            })
+            .then(response => response.json())
+            .then(json => {
+                document.getElementById('demoOutput').srcdoc = `<pre>${JSON.stringify(json, null, 2)}</pre>`;
+                status.textContent = `✅ Sanity check passed! n8n is running and responding.`;
+            })
+            .catch(error => {
+                status.textContent = `❌ Demo error: ${error.message}`;
+            });
+        }
+    </script>
+</body>
+</html>

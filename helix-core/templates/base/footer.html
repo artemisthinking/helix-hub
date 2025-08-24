@@ -1,0 +1,29 @@
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>🏛️ Helix Banking Operations</h4>
+            <p>Enterprise-grade file processing for financial institutions</p>
+        </div>
+        
+        <div class="footer-section">
+            <h4>📊 System Status</h4>
+            <div class="system-info">
+                <span id="systemUptime">Uptime: Loading...</span>
+                <span id="processedToday">Files Today: <span class="highlight">0</span></span>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <h4>🔗 Quick Links</h4>
+            <div class="footer-links">
+                <a href="/api/docs" target="_blank">📚 API Docs</a>
+                <a href="#" onclick="downloadLogs()">📋 Export Logs</a>
+                <a href="#" onclick="showSystemInfo()">ℹ️ System Info</a>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <small>🇨🇭 Built with Swiss precision • Version 1.0 • {{ moment().format('YYYY') }}</small>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,73 @@
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">📊</div>
+            <h4 class="stat-title">Files Processed Today</h4>
+        </div>
+        <div class="stat-value" id="filesProcessedToday">{{ stats.files_processed_today or 0 }}</div>
+        <div class="stat-change positive">
+            <span>📈</span>
+            <span>+{{ stats.files_increase or 0 }}% vs yesterday</span>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">💰</div>
+            <h4 class="stat-title">Transactions Processed</h4>
+        </div>
+        <div class="stat-value" id="transactionsProcessed">{{ stats.total_transactions or 0 | number_format }}</div>
+        <div class="stat-change positive">
+            <span>💹</span>
+            <span>{{ stats.transaction_volume or 0 | currency_format }}</span>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">⚡</div>
+            <h4 class="stat-title">Processing Speed</h4>
+        </div>
+        <div class="stat-value" id="processingSpeed">{{ stats.avg_processing_time or 0 }}s</div>
+        <div class="stat-change neutral">
+            <span>⚖️</span>
+            <span>Average per file</span>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">✅</div>
+            <h4 class="stat-title">Success Rate</h4>
+        </div>
+        <div class="stat-value" id="successRate">{{ stats.success_rate or 100 }}%</div>
+        <div class="stat-change positive">
+            <span>🎯</span>
+            <span>Swiss precision</span>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">🔄</div>
+            <h4 class="stat-title">Currently Processing</h4>
+        </div>
+        <div class="stat-value" id="currentlyProcessing">{{ stats.currently_processing or 0 }}</div>
+        <div class="stat-change neutral">
+            <span>⏱️</span>
+            <span>Active jobs</span>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">🌐</div>
+            <h4 class="stat-title">System Status</h4>
+        </div>
+        <div class="stat-value" style="font-size: 1.5rem; color: var(--success-green);">ONLINE</div>
+        <div class="stat-change positive">
+            <span>⏰</span>
+            <span>Uptime: {{ stats.uptime or "99.9%" }}</span>
+        </div>
+    </div>
+</div>

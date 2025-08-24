@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>💼 Executive Women's Academy</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; margin: 0; }
+        .container { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.15); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .title { font-size: 2.5em; text-align: center; margin-bottom: 10px; background: linear-gradient(45deg, #ffeaa7, #fab1a0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { text-align: center; font-size: 1.2em; margin-bottom: 30px; opacity: 0.9; }
+        .profile-section { display: flex; align-items: center; margin-bottom: 30px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; }
+        .profile-image { width: 120px; height: 120px; border-radius: 50%; margin-right: 30px; border: 4px solid #ffeaa7; object-fit: cover; }
+        .profile-info h2 { margin: 0 0 10px 0; color: #ffeaa7; }
+        .section { margin: 25px 0; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 15px; border-left: 5px solid #ffeaa7; }
+        .executive-quote { background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); padding: 25px; border-radius: 15px; text-align: center; font-style: italic; font-size: 1.3em; margin: 20px 0; }
+        .career-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .career-item { background: linear-gradient(135deg, #fab1a0 0%, #e17055 100%); padding: 15px; border-radius: 10px; text-align: center; color: white; font-weight: bold; }
+        .resource-link { background: rgba(255,255,255,0.1); padding: 10px; margin: 8px 0; border-radius: 8px; }
+        .resource-link a { color: #74b9ff; text-decoration: none; }
+        .stats { display: flex; justify-content: space-around; margin: 20px 0; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: #ffeaa7; }
+        .encouragement { background: linear-gradient(135deg, #00b894 0%, #00a085 100%); padding: 20px; border-radius: 15px; text-align: center; font-size: 1.1em; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">💼 Executive Women's Academy</div>
+        <div class="subtitle">Where Glass Ceilings Become Stepping Stones!</div>
+        
+        <div class="profile-section">
+            <img src="{{user_image || '/static/images/executive_woman_default.png'}}" alt="Executive Profile" class="profile-image">
+            <div class="profile-info">
+                <h2>{{guest_name || 'Executive Warrior'}}</h2>
+                <p><strong>Email:</strong> {{guest_email || 'leader@example.com'}}</p>
+                <p><strong>Academy Session:</strong> #{{academy_session || '001'}}</p>
+                <p><strong>Executive Level:</strong> {{job_description || 'C-Suite Leader'}}</p>
+                <p><strong>Industry:</strong> {{profile_text || 'Business Leadership'}}</p>
+            </div>
+        </div>
+        
+        <div class="executive-quote">
+            "{{executive_wisdom || 'The best leaders turn obstacles into opportunities and setbacks into comebacks. Your career journey is just beginning!'}}"
+        </div>
+        
+        <div class="section">
+            <h3>🚀 Executive Career Acceleration</h3>
+            <p>{{executive_advice || '💡 Leadership Wisdom: Every successful executive has faced technological challenges. Your ability to adapt and lead through uncertainty is what sets you apart from the competition.'}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🎯 C-Suite Ready Positions</h3>
+            <div class="career-grid">
+                {{#each career_suggestions}}
+                <div class="career-item">{{this}}</div>
+                {{else}}
+                <div class="career-item">Chief Executive Officer</div>
+                <div class="career-item">Chief Operating Officer</div>
+                <div class="career-item">Chief Strategy Officer</div>
+                <div class="career-item">Managing Director</div>
+                <div class="career-item">Board Member</div>
+                <div class="career-item">Executive Consultant</div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>📈 Executive Development Resources</h3>
+            {{#each executive_resources}}
+            <div class="resource-link">
+                <a href="{{this.url}}" target="_blank">{{this.title}}</a>
+            </div>
+            {{else}}
+            <div class="resource-link"><a href="https://hbr.org/topic/leadership" target="_blank">🎯 Harvard Business Review Leadership</a></div>
+            <div class="resource-link"><a href="https://www.mckinsey.com/featured-insights/leadership" target="_blank">💼 McKinsey Leadership Insights</a></div>
+            <div class="resource-link"><a href="https://www.linkedin.com/learning/topics/leadership" target="_blank">🚀 LinkedIn Learning Leadership</a></div>
+            {{/each}}
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">97%</div>
+                <div>Executive Success Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">C+</div>
+                <div>Leadership Grade</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{academy_session || '1'}}</div>
+                <div>Academy Level</div>
+            </div>
+        </div>
+        
+        <div class="encouragement">
+            <h3>🌟 Executive Encouragement</h3>
+            <p>{{encouragement || 'Technology may have stumbled today, but true leaders like you turn every challenge into a strategic advantage. Your executive presence and decision-making skills are exactly what the boardroom needs. Let\'s transform this moment into your leadership story!'}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🔧 What Happened Today</h3>
+            <p><strong>Tech Challenge:</strong> {{error_context || 'AI system encountered processing difficulties'}}</p>
+            <p><strong>Leadership Lesson:</strong> Great executives know that resilience and adaptability are core leadership competencies. This experience demonstrates your ability to navigate uncertainty.</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; font-size: 0.9em; opacity: 0.8;">
+            <p>Session: {{academy_session || '1'}} | Rating: ⭐⭐⭐⭐⭐ | Quality: {{content_quality || 'Executive-Level'}}</p>
+            <p>Generated: {{generation_timestamp || new Date().toISOString()}}</p>
+            <p>💼 Executive Women's Academy - Leading Through Every Challenge</p>
+        </div>
+    </div>
+</body>
+</html>

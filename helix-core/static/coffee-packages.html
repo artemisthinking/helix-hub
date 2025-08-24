@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☕ Swiss Coffee Package Store - Helix Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8B4513 0%, #D2B48C 50%, #8B4513 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #8B4513;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .packages {
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .package {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(139, 69, 19, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+        }
+
+        .package.free {
+            border-color: #888;
+        }
+
+        .package.espresso {
+            border-color: #8B4513;
+        }
+
+        .package.latte {
+            border-color: #D2B48C;
+            background: linear-gradient(135deg, rgba(210, 180, 140, 0.1) 0%, rgba(255, 255, 255, 0.95) 100%);
+        }
+
+        .package.cappuccino {
+            border-color: #A0522D;
+            background: linear-gradient(135deg, rgba(160, 82, 45, 0.1) 0%, rgba(255, 255, 255, 0.95) 100%);
+        }
+
+        .package.lifetime {
+            border-color: #FFD700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 255, 255, 0.95) 100%);
+            position: relative;
+        }
+
+        .package.lifetime::before {
+            content: "🏆 BEST VALUE";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FFD700;
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .package-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .package-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .package-subtitle {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .package-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #8B4513;
+            margin-bottom: 1.5rem;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .package-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .package-features li:before {
+            content: "✅ ";
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .buy-button {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .buy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.4);
+        }
+
+        .lifetime .buy-button {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #333;
+        }
+
+        .demo-section {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 2rem;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .demo-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .demo-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>☕ Swiss Coffee Packages</h1>
+        <p class="subtitle">Premium demos, AI experiences, and lifetime access - priced in coffee economics</p>
+        <div style="margin-top:1rem;">
+            <div class="service-card" style="max-width:500px;margin:0 auto;border:3px solid #4B0082;background:linear-gradient(135deg,rgba(75,0,130,0.15)0%,rgba(255,255,255,0.1)100%);padding:1.5rem 1rem 1rem 1rem;">
+                <div class="service-header" style="display:flex;align-items:center;margin-bottom:1rem;">
+                    <div class="service-icon" style="font-size:2rem;margin-right:1rem;">🦄</div>
+                    <div>
+                        <div class="service-title" style="font-size:1.2rem;font-weight:600;">Kafka Streaming <span class="status" style="color:#4B0082;">NEW!</span></div>
+                    </div>
+                </div>
+                <div class="service-description" style="opacity:0.8;margin-bottom:1rem;line-height:1.5;">Enterprise-grade event streaming, real-time analytics, and scalable messaging. Now part of the ultimate package!</div>
+                <a href="http://localhost:9092" class="service-link" style="display:inline-block;background:linear-gradient(135deg,#4B0082,#8B4513);color:white;text-decoration:none;padding:0.5rem 1rem;border-radius:8px;font-weight:500;">🦄 Kafka Console</a>
+            </div>
+        </div>
+        <div style="margin-top:1rem;">
+            <a href="/static/value-comparison.html" style="display:inline-block;background:linear-gradient(45deg,#4ade80,#fbbf24);color:#222;padding:0.8rem 2rem;border-radius:30px;font-weight:700;font-size:1.2rem;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,0.12);transition:all 0.3s;">🔎 Compare Value: Helix vs Big Tech</a>
+        </div>
+        <div style="margin-top:1rem;text-align:center;color:#fbbf24;font-size:1.1rem;font-weight:600;">See how Helix Hub beats Google, AWS, SAP, IBM, Azure for value, features, and freedom!</div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🎮 Free Demo Zone - Window Shopping</h2>
+        <p>Try before you buy! Basic demos available for free (no AI magic)</p>
+        <div class="demo-links">
+            <a href="/" class="demo-link">🎪 FaaF Academy</a>
+            <a href="/demo" class="demo-link">🎮 Demo Platform</a>
+            <a href="/helix" class="demo-link">🏦 Banking Dashboard</a>
+            <a href="/enterprise" class="demo-link">🏢 Enterprise Stack</a>
+        </div>
+    </div>
+
+    <div class="packages">
+        <div class="package free">
+            <div class="package-icon">🆓</div>
+            <div class="package-title">Window Shopping</div>
+            <div class="package-subtitle">Look but don't touch (much)</div>
+            <div class="package-price">FREE</div>
+            <ul class="package-features">
+                <li>CV maker (no AI)</li>
+                <li>Demo videos only</li>
+                <li>Watch & drool access</li>
+                <li>Basic templates</li>
+                <li>Limited time access</li>
+            </ul>
+            <button class="buy-button">Already Free!</button>
+        </div>
+
+        <div class="package espresso">
+            <div class="package-icon">☕</div>
+            <div class="package-title">Espresso</div>
+            <div class="package-subtitle">Quick caffeine hit</div>
+            <div class="package-price">$5</div>
+            <ul class="package-features">
+                <li>1 AI-powered demo session</li>
+                <li>Basic templates</li>
+                <li>24 hour access</li>
+                <li>Email support</li>
+                <li>Download results</li>
+            </ul>
+            <button class="buy-button" onclick="buyPackage('espresso', 5)">Buy Espresso</button>
+        </div>
+
+        <div class="package latte">
+            <div class="package-icon">🥛</div>
+            <div class="package-title">Latte</div>
+            <div class="package-subtitle">Smooth & creamy experience</div>
+            <div class="package-price">$15</div>
+            <ul class="package-features">
+                <li>3 AI demo sessions</li>
+                <li>All templates</li>
+                <li>1 week access</li>
+                <li>Priority support</li>
+                <li>Video tutorials</li>
+                <li>Export to PDF/Word</li>
+            </ul>
+            <button class="buy-button" onclick="buyPackage('latte', 15)">Buy Latte</button>
+        </div>
+
+        <div class="package cappuccino">
+            <div class="package-icon">🍫</div>
+            <div class="package-title">Cappuccino</div>
+            <div class="package-subtitle">Rich with chocolate sprinkles</div>
+            <div class="package-price">$45</div>
+            <ul class="package-features">
+                <li>Unlimited AI demos</li>
+                <li>Premium templates</li>
+                <li>1 month access</li>
+                <li>Midjourney credits</li>
+                <li>Personal branding kit</li>
+                <li>LinkedIn optimization</li>
+                <li>Career coaching session</li>
+            </ul>
+            <button class="buy-button" onclick="buyPackage('cappuccino', 45)">Buy Cappuccino</button>
+        </div>
+
+        <div class="package lifetime">
+            <div class="package-icon">🏆</div>
+            <div class="package-title">Chuck's Inner Circle</div>
+            <div class="package-subtitle">Lifetime membership with Swiss perks</div>
+            <div class="package-price">$297</div>
+            <ul class="package-features">
+                <li>Everything forever</li>
+                <li>New features first</li>
+                <li>Midjourney factory access</li>
+                <li>Personal AI assistant</li>
+                <li>Monthly group coaching</li>
+                <li>Swiss chocolate delivery*</li>
+                <li>Chuck's personal WhatsApp</li>
+                <li>Reseller rights</li>
+            </ul>
+            <button class="buy-button" onclick="buyPackage('lifetime', 297)">Join Chuck's Circle</button>
+        </div>
+    </div>
+
+    <script>
+        function buyPackage(packageName, price) {
+            // Simulate payment flow - replace with real Stripe/PayPal integration
+            const confirmed = confirm(`Ready to buy ${packageName} package for $${price}?`);
+            
+            if (confirmed) {
+                // This would integrate with Stripe, PayPal, or Buy Me a Coffee
+                alert(`🎉 Success! Your ${packageName} package is being processed. Check your email for access instructions!`);
+                
+                // TODO: Integrate with real payment processor
+                // Example Stripe integration:
+                // stripe.redirectToCheckout({
+                //     sessionId: response.sessionId
+                // });
+            }
+        }
+
+        // Add some coffee animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const packages = document.querySelectorAll('.package');
+            packages.forEach((pkg, index) => {
+                setTimeout(() => {
+                    pkg.style.opacity = '0';
+                    pkg.style.transform = 'translateY(50px)';
+                    pkg.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        pkg.style.opacity = '1';
+                        pkg.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

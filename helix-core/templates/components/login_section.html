@@ -1,0 +1,62 @@
+<div class="login-container" id="loginContainer">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>🏦 Helix Banking Login</h2>
+            <p>Swiss-precision enterprise authentication</p>
+        </div>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label class="form-label">👤 Username</label>
+                <input type="text" class="form-input" id="loginUsername" required autocomplete="username">
+                <div class="form-hint">Available: admin, dev, auditor</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">🔐 Password</label>
+                <input type="password" class="form-input" id="loginPassword" required autocomplete="current-password">
+                <div class="form-hint">Use: [username]pass (e.g., adminpass)</div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary login-btn" id="loginBtn">
+                🚀 Login to Dashboard
+            </button>
+            
+            <div class="login-error" id="loginError" style="display: none;"></div>
+        </form>
+        
+        <div class="login-footer">
+            <div class="demo-users">
+                <h4>🎭 Demo Users:</h4>
+                <div class="demo-user-list">
+                    <div class="demo-user" onclick="fillLoginForm('admin', 'adminpass')">
+                        <span class="user-emoji">👑</span>
+                        <span class="user-info">
+                            <strong>Admin Swiss</strong><br>
+                            <small>Full system access</small>
+                        </span>
+                    </div>
+                    <div class="demo-user" onclick="fillLoginForm('dev', 'devpass')">
+                        <span class="user-emoji">💻</span>
+                        <span class="user-info">
+                            <strong>Dev Engineer</strong><br>
+                            <small>Upload & development tools</small>
+                        </span>
+                    </div>
+                    <div class="demo-user" onclick="fillLoginForm('auditor', 'auditpass')">
+                        <span class="user-emoji">📋</span>
+                        <span class="user-info">
+                            <strong>Audit Manager</strong><br>
+                            <small>Read-only access & reports</small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="system-info">
+                <small>🕒 System Time: <span id="currentSystemTime"></span></small><br>
+                <small>🌍 Timezone: UTC</small>
+            </div>
+        </div>
+    </div>
+</div>

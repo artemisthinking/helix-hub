@@ -1,0 +1,181 @@
+{% extends 'base/base.html' %}
+
+{% block title %}🎛️ Helix Enterprise Dashboard{% endblock %}
+
+{% block content %}
+<!-- Authentication Components -->
+{% include 'components/login_section.html' %}
+{% include 'components/user_display.html' %}
+
+<div class="dashboard">
+    <!-- Stats Overview -->
+    {% include 'components/stats_cards.html' %}
+    
+    <!-- Upload Section -->
+    <div class="dashboard-section upload">
+        {% include 'components/upload_section.html' %}
+    </div>
+    
+    <!-- Main Content Grid -->
+    <div class="dashboard-grid">
+        <!-- Processing Queue -->
+        <div class="card dashboard-section processing">
+            <div class="card-header">
+                <h3>⚙️ Processing Queue</h3>
+                <span class="badge badge-info">{{ current_processing | length }} active</span>
+            </div>
+            <div class="card-body">
+                <div id="processingQueue">
+                    {% for job_id, job in current_processing.items() %}
+                    <div class="file-item">
+                        <div class="file-icon">{{ job.file_type_emoji or '📄' }}</div>
+                        <div class="file-info">
+                            <div class="file-name">{{ job.filename }}</div>
+                            <div class="file-meta">
+                                {{ job.routing_code }} • Started {{ job.started_at | timeago }}
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ (job.progress or 0)|string + '%' }}"></div>
+                            </div>
+                        </div>
+                        <div class="file-status processing">Processing</div>
+                    </div>
+                    {% else %}
+                    <div class="text-center p-4">
+                        <div style="font-size: 3rem; opacity: 0.5;">⏱️</div>
+                        <p>No files currently processing</p>
+                        <p class="text-muted">Upload files above to get started</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Activity Feed -->
+        <div class="dashboard-section logs">
+            {% include 'components/activity_feed.html' %}
+        </div>
+        
+        <!-- File Types Chart -->
+        <div class="card dashboard-section stats">
+            <div class="card-header">
+                <h3>📊 File Types Distribution</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="fileTypesChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        
+        <!-- Processing Times Chart -->
+        <div class="card dashboard-section api_tools">
+            <div class="card-header">
+                <h3>⚡ Processing Performance</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="performanceChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        
+        <!-- System Health -->
+        <div class="card dashboard-section all">
+            <div class="card-header">
+                <h3>🩺 System Health</h3>
+            </div>
+            <div class="card-body">
+                <div class="health-metrics">
+                    <div class="health-item">
+                        <span class="health-label">SFTP Connection</span>
+                        <span class="health-status online">🟢 Connected</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Database</span>
+                        <span class="health-status online">🟢 Healthy</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Processing Engine</span>
+                        <span class="health-status online">🟢 Running</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Memory Usage</span>
+                        <span class="health-status">📊 {{ system_info.memory_usage or '45%' }}</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">CPU Usage</span>
+                        <span class="health-status">⚡ {{ system_info.cpu_usage or '23%' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Files -->
+        <div class="card dashboard-section audit_trail">
+            <div class="card-header">
+                <h3>📁 Recent Files</h3>
+                <a href="#" class="btn btn-secondary btn-sm admin-only">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="recent-files">
+                    {% for file in recent_files[:5] %}
+                    <div class="file-item">
+                        <div class="file-icon">{{ file.type_emoji or '📄' }}</div>
+                        <div class="file-info">
+                            <div class="file-name">{{ file.filename }}</div>
+                            <div class="file-meta">
+                                {{ file.file_type }} • {{ file.transaction_count }} transactions
+                            </div>
+                        </div>
+                        <div class="file-status {{ file.status }}">{{ file.status | title }}</div>
+                    </div>
+                    {% else %}
+                    <div class="text-center p-4">
+                        <div style="font-size: 3rem; opacity: 0.5;">📂</div>
+                        <p>No recent files</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Tools -->
+        <div class="card dashboard-section admin-only">
+            <div class="card-header">
+                <h3>👑 Admin Tools</h3>
+            </div>
+            <div class="card-body">
+                <div class="admin-tools">
+                    <button class="btn btn-primary admin-only">👥 Manage Users</button>
+                    <button class="btn btn-secondary admin-only">⚙️ System Settings</button>
+                    <button class="btn btn-secondary admin-only">🗑️ Clear Logs</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+
+<script>
+// Initialize dashboard with data
+const dashboardData = {{ dashboard_data | tojson | safe }};
+
+// Initialize everything when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Authentication will initialize automatically
+    
+    // Initialize dashboard components after auth is ready
+    setTimeout(() => {
+        initializeDashboard(dashboardData);
+        initializeUploadSection();
+        
+        // Start real-time updates
+        startRealtimeUpdates();
+    }, 100);
+});
+</script>
+{% endblock %}
+</script>
+{% endblock %}

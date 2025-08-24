@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">14</div>
+                <div>Act            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">📊</div>
+                    <div>
+                        <div class="service-title">Grafana <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Beautiful dashboards and metrics visualization</div>
+                <a href="http://localhost:3000" class="service-link">View Dashboards</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">⚡</div>
+                    <div>
+                        <div class="service-title">Redis Cache <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">High-speed in-memory caching and session storage</div>
+                <a href="http://localhost:6379" class="service-link">Cache Console</a>
+            </div>es</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$80K+</div>
+                <div>Infrastructure Value</div>
+            </div>title>Helix Hub Enterprise - Infrastructure Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #4ade80;
+        }
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .service-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+        .service-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .service-description {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .service-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .service-link:hover {
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+            transform: scale(1.05);
+        }
+        .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #4ade80;
+            margin-left: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .enterprise-badge {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            color: #1f2937;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="enterprise-badge">🏆 ENTERPRISE INFRASTRUCTURE</div>
+            <h1>🎪 Helix Hub</h1>
+            <p>$150K+ Enterprise Stack • One Command Deployment • Zero Vendor Lock-in</p>
+            <div style="margin-top:1rem;">
+                <a href="/static/value-comparison.html" style="display:inline-block;background:linear-gradient(45deg,#4ade80,#fbbf24);color:#222;padding:0.8rem 2rem;border-radius:30px;font-weight:700;font-size:1.2rem;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,0.12);transition:all 0.3s;">🔎 Compare Value: Helix vs Big Tech</a>
+            </div>
+            <div style="margin-top:1rem;text-align:center;color:#fbbf24;font-size:1.1rem;font-weight:600;">See how Helix Hub beats Google, AWS, SAP, IBM, Azure for value, features, and freedom!</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">15</div>
+                <div>Active Services</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$100K+</div>
+                <div>Infrastructure Value</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$5</div>
+                <div>Monthly Cost</div>
+            </div>
+                            <div class="stat-card">
+                                    <div class="stat-value">99.9%</div>
+                                    <div>Uptime</div>
+                            </div>
+                    </div>
+        
+                    <div style="margin: 2rem 0; text-align: center;">
+                        <a href="/static/wins-and-wrecks.html" style="display: inline-block; background: linear-gradient(90deg,#ffe066,#ffd700,#ffb700); color: #222; font-size: 1.3rem; font-weight: bold; padding: 1rem 2.5rem; border-radius: 12px; box-shadow: 0 2px 12px #0002; text-decoration: none; transition: transform 0.1s;">
+                            🏆 Wins & Wrecks: Rate, Score, and Share! <span style="font-size:1.5rem;">🥋</span>
+                        </a>
+                        <div style="margin-top:0.7rem; color:#555; font-size:1.05rem;">
+                            Every story tells a service win or wreck—log in to rate, comment, and earn badges!<br>
+                            <span style="color:#27ae60; font-weight:bold;">Join the fun, give feedback, and score points for free coffee!</span>
+                        </div>
+                    </div>
+                <div class="stat-value">99.9%</div>
+                <div>Uptime</div>
+            </div>
+        </div>
+
+        <div class="services">
+            <!-- 🚨 FEATURED: Coffee Package Store -->
+            <div class="service-card" style="border: 3px solid #8B4513; background: linear-gradient(135deg, rgba(139, 69, 19, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);">
+                <div class="service-header">
+                    <div class="service-icon">☕</div>
+                    <div>
+                        <div class="service-title">Swiss Coffee Packages <span class="status" style="color: #8B4513;">NEW!</span></div>
+                    </div>
+                </div>
+                <div class="service-description">Premium demo access starting at $5 • Espresso to Lifetime membership • Real Swiss pricing!</div>
+                <a href="/coffee" class="service-link" style="background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);">☕ Buy Coffee Packages</a>
+            </div>
+
+            <!-- 🦍 Kafka Streaming Enterprise -->
+            <div class="service-card" style="border: 3px solid #4B0082; background: linear-gradient(135deg, rgba(75,0,130,0.15) 0%, rgba(255,255,255,0.1) 100%);">
+                <div class="service-header">
+                    <div class="service-icon">🦄</div>
+                    <div>
+                        <div class="service-title">Kafka Streaming <span class="status" style="color: #4B0082;">NEW!</span></div>
+                    </div>
+                </div>
+                <div class="service-description">Enterprise-grade event streaming, real-time analytics, and scalable messaging. Now part of the ultimate package!</div>
+                <a href="http://localhost:9092" class="service-link" style="background: linear-gradient(135deg, #4B0082 0%, #8B4513 100%);">🦄 Kafka Console</a>
+            </div>
+
+            <!-- 🦍 Kong API Gateway Special Deal -->
+            <div class="service-card" style="border: 3px solid #1a1a1a; background: linear-gradient(135deg, rgba(26,26,26,0.2) 0%, rgba(255,255,255,0.1) 100%);">
+                <div class="service-header">
+                    <div class="service-icon">🦍</div>
+                    <div>
+                        <div class="service-title">Kong API Gateway <span class="status" style="color: #1a1a1a;">SPECIAL</span></div>
+                    </div>
+                </div>
+                <div class="service-description">Enterprise-grade API management, security, and scalability. Now included in the $100K+ stack!</div>
+                <a href="http://localhost:8001" class="service-link" style="background: linear-gradient(135deg, #1a1a1a 0%, #4ade80 100%);">🦍 Kong Console</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🎪</div>
+                    <div>
+                        <div class="service-title">FaaF Academy <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Career coaching SaaS platform with $10k-100k+ revenue potential</div>
+                <a href="http://localhost:5000" class="service-link">Launch Platform</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🐳</div>
+                    <div>
+                        <div class="service-title">Portainer <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Docker container management with enterprise-grade UI</div>
+                <a href="https://localhost:9443" class="service-link">Manage Containers</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🔧</div>
+                    <div>
+                        <div class="service-title">n8n Automation <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Visual workflow automation with Oracle podcast integration</div>
+                <a href="http://localhost:5678" class="service-link">Build Workflows</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🔐</div>
+                    <div>
+                        <div class="service-title">Keycloak SSO <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Enterprise authentication and identity management</div>
+                <a href="http://localhost:8081" class="service-link">Manage Auth</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🗄️</div>
+                    <div>
+                        <div class="service-title">Vault Secrets <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Secure secrets management and encryption services</div>
+                <a href="http://localhost:8200" class="service-link">Access Vault</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">📁</div>
+                    <div>
+                        <div class="service-title">File Browser <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Web-based file management with upload capabilities</div>
+                <a href="http://localhost:8082" class="service-link">Browse Files</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🤖</div>
+                    <div>
+                        <div class="service-title">Ollama AI <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Local AI model serving with llama3.2:1b ready</div>
+                <a href="http://localhost:11434" class="service-link">AI Console</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🌐</div>
+                    <div>
+                        <div class="service-title">Traefik Gateway <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Reverse proxy with automatic HTTPS and load balancing</div>
+                <a href="http://localhost:8080" class="service-link">View Routes</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🏦</div>
+                    <div>
+                        <div class="service-title">Helix Banking <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Financial file processing (MT940, BAI2, CAMT053)</div>
+                <a href="http://localhost:5000/helix" class="service-link">Banking Dashboard</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">📊</div>
+                    <div>
+                        <div class="service-title">Prometheus <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Enterprise metrics collection and monitoring system</div>
+                <a href="http://localhost:9090" class="service-link">View Metrics</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">📈</div>
+                    <div>
+                        <div class="service-title">Grafana <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">Beautiful dashboards and analytics visualization</div>
+                <a href="http://localhost:3000" class="service-link">View Dashboards</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon">🖥️</div>
+                    <div>
+                        <div class="service-title">Node Exporter <span class="status"></span></div>
+                    </div>
+                </div>
+                <div class="service-description">System metrics export for monitoring infrastructure</div>
+                <a href="http://localhost:9100" class="service-link">System Metrics</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple health check animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusIndicators = document.querySelectorAll('.status');
+            statusIndicators.forEach(indicator => {
+                // Randomly pulse the status indicators
+                setInterval(() => {
+                    indicator.style.backgroundColor = '#4ade80';
+                    setTimeout(() => {
+                        indicator.style.backgroundColor = '#22c55e';
+                    }, 500);
+                }, 2000 + Math.random() * 1000);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -9,90 +9,7 @@ services:
       - "2181:2181"
     networks:
       - helix-net
-    restart: unless-stopped
-    profiles: ["core"]
-
-  moodle:
-    image: bitnami/moodle:latest
-    mem_limit: 512m
-    cpus: 0.5
-    restart: unless-stopped
-    environment:
-      - MOODLE_DATABASE_TYPE=pgsql
-      - MOODLE_DATABASE_HOST=postgres-moodle
-      - MOODLE_DATABASE_PORT_NUMBER=5432
-      - MOODLE_DATABASE_USER=moodle
-      - MOODLE_DATABASE_PASSWORD=moodlepass
-      - MOODLE_DATABASE_NAME=moodle
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - "8083:8080"  # Host port 8083, container port 8080
-    networks:
-      - helix-net
-    volumes:
-      - moodle_data:/bitnami/moodle
-      - moodle_apache:/bitnami/apache
-    depends_on:
-      - postgres-moodle
-    profiles: ["lms"]
-  postgres-moodle:
-    image: postgres:14-alpine
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=moodle
-      - POSTGRES_USER=moodle
-      - POSTGRES_PASSWORD=moodlepass
-    networks:
-      - helix-net
-    volumes:
-      - moodle_db_data:/var/lib/postgresql/data
-    profiles: ["lms"]
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    ports:
-      - "9092:9092"
-    networks:
-      - helix-net
-    restart: unless-stopped
-    profiles: ["core"]
-
-  traefik:
-    image: traefik:v2.10
-    command:
-      - --providers.file.filename=/etc/traefik/dynamic.yml
-      - --providers.docker=false
-      - --entryPoints.websecure.address=:8443
-      - --api.dashboard=true
-      - --log.level=INFO
-    ports:
-      - "8443:8443"
-      - "8080:8080"
-    volumes:
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
-      - ./traefik/certs:/certs:ro
-    networks:
-      - helix-net
-    restart: unless-stopped
-    profiles: ["security"]
-
-  helix-core:
-    build: ./helix-core
-    image: helix/helix-core:dev
-    environment:
-      - FLASK_ENV=development
-      - APP_HOST=0.0.0.0
-      - APP_PORT=5000
-      - DATABASE_URL=postgresql://helix:helixpass@postgres:5432/helix
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-secret-key}
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - SFTP_HOST=sftp-demo
       - SFTP_PORT=22
       - SFTP_USER=bank
@@ -109,7 +26,6 @@ services:
       - helix-net
     restart: unless-stopped
     profiles: ["core"]
-
   postgres:
     image: postgres:14-alpine
     environment:
@@ -123,7 +39,6 @@ services:
       - helix-net
     restart: unless-stopped
     profiles: ["core"]
-
   sftp-demo:
     image: atmoz/sftp:latest
     command: bank:bankpassword:1001
@@ -134,32 +49,31 @@ services:
     networks:
       - helix-net
     restart: unless-stopped
-    profiles: ["banking"]
+    profiles: ["core"]
 
-  n8n:
-    image: n8nio/n8n:1.19.4
-    restart: unless-stopped
-    ports:
-      - "5678:5678"
-      - "5679:5679" # HTTPS port if you want to expose it
-    environment:
-      - N8N_HOST=n8n.helix.local
-      - N8N_DEFAULT_CORS_ALLOW_ORIGIN=*
-      - N8N_DEFAULT_ALLOWED_ORIGINS=*
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=admin
-      - N8N_HOST=0.0.0.0
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=http
-      - N8N_PROTOCOL=https
-      - GENERIC_TIMEZONE=Europe/Zurich
-    volumes:
-      - n8n_data:/home/node/.n8n
-      - ./podcast-studio:/podcast-studio:ro
-    networks:
-      - helix-net
-    profiles: ["ai"]
+  # n8n:
+  #   image: n8nio/n8n:1.19.4
+  #   restart: unless-stopped
+  #   postgres:
+  #     image: postgres:14-alpine
+  #     environment:
+  #       POSTGRES_DB: helix
+  #       POSTGRES_USER: helix
+  #       POSTGRES_PASSWORD: helixpass
+  #     volumes:
+  #       - helix_db_data:/var/lib/postgresql/data
+  #       - ./postgres/init:/docker-entrypoint-initdb.d:ro
+  #     networks:
+  #       - helix-net
+  #     restart: unless-stopped
+  #     profiles: ["infra"]
+  #     - GENERIC_TIMEZONE=Europe/Zurich
+  #   volumes:
+  #     - n8n_data:/home/node/.n8n
+  #     - ./podcast-studio:/podcast-studio:ro
+  #   networks:
+  #     - helix-net
+  #   profiles: ["ai"]
 
   ollama:
     image: ollama/ollama:latest
@@ -208,7 +122,7 @@ services:
       - FB_PASSWORD=admin
     networks:
       - helix-net
-    profiles: ["banking"]
+    profiles: ["core"]
 
   # HashiCorp Vault - Secret Management Engine
   vault:
@@ -391,9 +305,6 @@ volumes:
   n8n_data:
   ollama_data:
   filebrowser_data:
-  vault_data:
-  keycloak_data:
-  portainer_data:
   prometheus_data:
   grafana_data:
   redis_data:

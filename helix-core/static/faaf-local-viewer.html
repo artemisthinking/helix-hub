@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🎪 FaaF Academy - Local Viewer</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #2d3436; color: white; padding: 20px; }
+        .viewer-container { max-width: 1200px; margin: 0 auto; }
+        .controls { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .test-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
+        .test-btn { background: linear-gradient(135deg, #74b9ff, #0984e3); padding: 15px; border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: bold; }
+        .test-btn:hover { background: linear-gradient(135deg, #0984e3, #74b9ff); }
+        .output-frame { width: 100%; height: 600px; border: 2px solid #74b9ff; border-radius: 10px; background: white; }
+        .url-display { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="viewer-container">
+        <h1>🎪 FaaF Academy - Local Test Viewer</h1>
+        
+        <div class="controls">
+            <h3>🎯 Quick Test Buttons</h3>
+            <div class="test-buttons">
+                <button class="test-btn" onclick="testFemaleExecutive()">👩‍💼 Female Executive</button>
+                <button class="test-btn" onclick="testYoungProfessional()">🎓 Young Professional</button>
+                <button class="test-btn" onclick="testCareerTransition()">🎯 Career Transition</button>
+                <button class="test-btn" onclick="testChuckAcademy()">🎪 Chuck Academy</button>
+                <button class="test-btn" onclick="testTechProfessional()">💻 Tech Professional</button>
+                <button class="test-btn" onclick="testFinanceProfessional()">💰 Finance Professional</button>
+            </div>
+            
+            <div class="url-display" id="currentUrl">
+                Ready to test! Click a button above to send request to n8n workflow.
+            </div>
+        </div>
+        
+        <iframe id="outputFrame" class="output-frame" src="about:blank"></iframe>
+    </div>
+
+    <script>
+    // Use secure HTTPS endpoint for n8n workflow to avoid mixed content errors
+    const baseUrl = 'https://n8n.helix.local:8443/webhook-test/oracle-podcast_v4';
+        
+        function sendRequest(data, testName) {
+            document.getElementById('currentUrl').textContent = `Testing: ${testName} - Sending request...`;
+            
+            fetch(baseUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(html => {
+                const iframe = document.getElementById('outputFrame');
+                iframe.srcdoc = html;
+                document.getElementById('currentUrl').textContent = `✅ ${testName} - Response loaded successfully!`;
+            })
+            .catch(error => {
+                document.getElementById('currentUrl').textContent = `❌ Error: ${error.message}`;
+            });
+        }
+        
+        function testFemaleExecutive() {
+            sendRequest({
+                "name": "Sarah Johnson",
+                "email": "sarah@executive.com", 
+                "profile_text": "She is a senior executive with 15 years of leadership experience in technology",
+                "job_description": "Chief Technology Officer",
+                "prompt_type": "general"
+            }, "Female Executive Template");
+        }
+        
+        function testYoungProfessional() {
+            sendRequest({
+                "name": "Alex Thompson",
+                "email": "alex@startup.com",
+                "profile_text": "Recent graduate intern at tech startup with computer science degree",
+                "job_description": "Junior Software Developer",
+                "prompt_type": "general"
+            }, "Young Professional Template");
+        }
+        
+        function testCareerTransition() {
+            sendRequest({
+                "name": "Mike Rodriguez",
+                "email": "mike@transition.com",
+                "profile_text": "Looking for career change from finance to technology sector",
+                "job_description": "Exploring new opportunities in tech",
+                "prompt_type": "general"
+            }, "Career Transition Template");
+        }
+        
+        function testChuckAcademy() {
+            sendRequest({
+                "name": "Chuck Norris",
+                "email": "chuck@roundhouse.com",
+                "profile_text": "Legendary martial artist and ultimate fighter",
+                "job_description": "Ultimate Fighter",
+                "prompt_type": "general"
+            }, "Chuck Academy Template");
+        }
+        
+        function testTechProfessional() {
+            sendRequest({
+                "name": "Jordan Kim",
+                "email": "jordan@techcorp.com",
+                "profile_text": "Software engineer with expertise in cloud architecture and microservices",
+                "job_description": "Senior Software Engineer",
+                "prompt_type": "general"
+            }, "Tech Professional Content");
+        }
+        
+        function testFinanceProfessional() {
+            sendRequest({
+                "name": "Maria Santos",
+                "email": "maria@finance.com",
+                "profile_text": "Investment banking professional with portfolio management experience",
+                "job_description": "Investment Banker",
+                "prompt_type": "general"
+            }, "Finance Professional Content");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<div class="user-display" id="userDisplay" style="display: none;">
+    <div class="user-info-card">
+        <div class="user-avatar">
+            <span class="user-emoji" id="userEmoji">👤</span>
+        </div>
+        
+        <div class="user-details">
+            <div class="user-name" id="userFullName">Guest User</div>
+            <div class="user-role">
+                <span class="role-badge" id="userRole">guest</span>
+                <span class="role-description" id="roleDescription">No access</span>
+            </div>
+        </div>
+        
+        <div class="user-timestamps">
+            <div class="timestamp-item">
+                <span class="timestamp-label">🕒 Login:</span>
+                <span class="timestamp-value" id="loginTimestamp">--</span>
+            </div>
+            <div class="timestamp-item">
+                <span class="timestamp-label">🌍 Local:</span>
+                <span class="timestamp-value" id="localTimestamp">--</span>
+            </div>
+            <div class="timestamp-item">
+                <span class="timestamp-label">📊 Session:</span>
+                <span class="timestamp-value" id="sessionDuration">--</span>
+            </div>
+        </div>
+        
+        <div class="user-actions">
+            <button class="btn btn-secondary btn-sm" id="userProfileBtn">
+                ⚙️ Profile
+            </button>
+            <button class="btn btn-secondary btn-sm" id="logoutBtn">
+                🚪 Logout
+            </button>
+        </div>
+    </div>
+    
+    <!-- Role-based permissions display -->
+    <div class="permissions-display" id="permissionsDisplay">
+        <h4>🔐 Your Permissions</h4>
+        <div class="permissions-grid" id="permissionsGrid">
+            <!-- Dynamically populated based on role -->
+        </div>
+    </div>
+</div>

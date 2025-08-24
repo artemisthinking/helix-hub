@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🎓 Young Professional Academy</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color: white; padding: 20px; margin: 0; }
+        .container { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .title { font-size: 2.5em; text-align: center; margin-bottom: 10px; background: linear-gradient(45deg, #00cec9, #55a3ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { text-align: center; font-size: 1.2em; margin-bottom: 30px; opacity: 0.9; }
+        .profile-section { display: flex; align-items: center; margin-bottom: 30px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; }
+        .profile-image { width: 120px; height: 120px; border-radius: 50%; margin-right: 30px; border: 4px solid #00cec9; object-fit: cover; }
+        .profile-info h2 { margin: 0 0 10px 0; color: #00cec9; }
+        .section { margin: 25px 0; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 15px; border-left: 5px solid #00cec9; }
+        .motivation-quote { background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%); padding: 25px; border-radius: 15px; text-align: center; font-style: italic; font-size: 1.3em; margin: 20px 0; }
+        .career-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
+        .career-item { background: linear-gradient(135deg, #00b894 0%, #00a085 100%); padding: 15px; border-radius: 10px; text-align: center; color: white; font-weight: bold; }
+        .resource-link { background: rgba(255,255,255,0.1); padding: 10px; margin: 8px 0; border-radius: 8px; }
+        .resource-link a { color: #74b9ff; text-decoration: none; }
+        .stats { display: flex; justify-content: space-around; margin: 20px 0; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: #00cec9; }
+        .encouragement { background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); padding: 20px; border-radius: 15px; text-align: center; font-size: 1.1em; margin: 20px 0; }
+        .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
+        .tip-card { background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🎓 Young Professional Academy</div>
+        <div class="subtitle">Your Career Launch Pad - Tech Glitches Can't Stop Your Momentum!</div>
+        
+        <div class="profile-section">
+            <img src="{{user_image || '/static/images/young_professional_default.png'}}" alt="Young Professional Profile" class="profile-image">
+            <div class="profile-info">
+                <h2>{{guest_name || 'Rising Star'}}</h2>
+                <p><strong>Email:</strong> {{guest_email || 'future.leader@example.com'}}</p>
+                <p><strong>Academy Session:</strong> #{{academy_session || '001'}}</p>
+                <p><strong>Career Stage:</strong> {{job_description || 'Entry-Level Professional'}}</p>
+                <p><strong>Field:</strong> {{profile_text || 'Emerging Professional'}}</p>
+                <p><strong>Experience Level:</strong> {{experience_level || 'Early Career'}}</p>
+            </div>
+        </div>
+        
+        <div class="motivation-quote">
+            "{{young_professional_wisdom || 'Every successful career started with someone who refused to let temporary setbacks define their permanent potential. Your journey is just beginning!'}}"
+        </div>
+        
+        <div class="section">
+            <h3>🚀 Career Launch Strategy</h3>
+            <p>{{career_advice || '💡 Young Professional Wisdom: The best professionals learn to roll with the punches. When technology fails, your adaptability and problem-solving skills shine even brighter. Employers love candidates who stay cool under pressure!'}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🎯 Entry-Level & Growth Opportunities</h3>
+            <div class="career-grid">
+                {{#each career_suggestions}}
+                <div class="career-item">{{this}}</div>
+                {{else}}
+                <div class="career-item">Junior Analyst</div>
+                <div class="career-item">Associate Consultant</div>
+                <div class="career-item">Project Coordinator</div>
+                <div class="career-item">Business Development</div>
+                <div class="career-item">Account Manager</div>
+                <div class="career-item">Operations Specialist</div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>💼 Young Professional Success Tips</h3>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4>🌟 Network Like a Pro</h4>
+                    <p>Connect with professionals in your field. LinkedIn is your best friend!</p>
+                </div>
+                <div class="tip-card">
+                    <h4>📚 Never Stop Learning</h4>
+                    <p>Stay curious and keep developing new skills. The job market rewards lifelong learners.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>🎯 Set Clear Goals</h4>
+                    <p>Define where you want to be in 2-5 years and work backwards to create your path.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>💪 Embrace Challenges</h4>
+                    <p>Every obstacle is a chance to prove your resilience and grow stronger.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>📱 Young Professional Resources</h3>
+            {{#each young_pro_resources}}
+            <div class="resource-link">
+                <a href="{{this.url}}" target="_blank">{{this.title}}</a>
+            </div>
+            {{else}}
+            <div class="resource-link"><a href="https://www.linkedin.com/learning/" target="_blank">🎓 LinkedIn Learning Career Courses</a></div>
+            <div class="resource-link"><a href="https://www.coursera.org/browse/business" target="_blank">📚 Coursera Business Skills</a></div>
+            <div class="resource-link"><a href="https://www.glassdoor.com/blog/career-advice/" target="_blank">💼 Glassdoor Career Advice</a></div>
+            <div class="resource-link"><a href="https://www.indeed.com/career-advice" target="_blank">🚀 Indeed Career Guide</a></div>
+            {{/each}}
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">85%</div>
+                <div>Success Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">A-</div>
+                <div>Potential Grade</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{academy_session || '1'}}</div>
+                <div>Academy Level</div>
+            </div>
+        </div>
+        
+        <div class="encouragement">
+            <h3>🌟 Your Career Future is Bright!</h3>
+            <p>{{encouragement || 'Hey there, future leader! Technology hiccups happen to everyone, but your ability to stay positive and keep moving forward is what will set you apart in your career. Every successful professional has faced setbacks - it\'s how you bounce back that matters. Your career adventure is just getting started!'}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🔧 What Happened Today</h3>
+            <p><strong>Tech Issue:</strong> {{error_context || 'AI processing encountered some difficulties'}}</p>
+            <p><strong>Learning Opportunity:</strong> This experience shows you can handle unexpected challenges with grace - a key skill employers value!</p>
+            <p><strong>Next Steps:</strong> Use this as a conversation starter in interviews about problem-solving and adaptability!</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; font-size: 0.9em; opacity: 0.8;">
+            <p>Session: {{academy_session || '1'}} | Rating: ⭐⭐⭐⭐⭐ | Quality: {{content_quality || 'Future Leader'}}</p>
+            <p>Generated: {{generation_timestamp || new Date().toISOString()}}</p>
+            <p>🎓 Young Professional Academy - Building Tomorrow's Leaders Today</p>
+        </div>
+    </div>
+</body>
+</html>
