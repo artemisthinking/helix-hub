@@ -256,7 +256,7 @@ services:
   #     - helix-net
   #   depends_on:
   #     - postgres
-   #     - vault
+  #     - vault
   #   command: ["start-dev", "--import-realm"]
   #   profiles: ["security"]
 
@@ -267,14 +267,13 @@ services:
     ports:
       - "9443:9443"
       - "8000:8000"
-      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     networks:
       - helix-net
     restart: unless-stopped
-  # Remove the command line entirely!
+    command: --admin-password='$$2y$$10$$N8gF8baVhWlwxLVqda/roOeHdSO.sZeyW8xpmCy4KNQiCyU5..d6S'
     # Default admin password: helixadmin123 (change after first login)
     profiles: ["monitoring", "security"]
 
