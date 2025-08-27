@@ -1,8 +1,17 @@
-<img src="helix-core/data/jose_image.jpg" alt="Chick Logo" width="120" style="border-radius:50%;margin-bottom:10px;" />
+# <img src="helix-core/data/jose_image.jpg" alt="Chick Logo" width="120" style="border-radius:50%;margin-bottom:10px;" />
 
 # 🐣 Helix Hub v0.0.1 – "Chuck-Approved HTTPS Milestone"
 
 > **Live Status:** ✅ 85% Production-Ready – HTTPS, mkcert, Traefik, and DevSecOps baked in!
+Helix HIUB Service Discovery Script
+>  helix-hub/helix-service-discovery.sh
+### VPS - access via Secure Shell
+## Local Configure to connect to VPS 
+> ssh helix-do
+# Initial steps config a local .config 
+> nano   ~/.ssh/config
+> chmod 600 ~/.ssh/id_ed25519
+> cat  ~/.ssh/config
 
 ![Chuck QA GIF](https://media.giphy.com/media/3o6ZtpxSZbQRRnwCKQ/giphy.gif)
 
@@ -1185,3 +1194,4 @@ Run the health check script after install:
 ```
 
 This will help you verify endpoints, DB connectivity, and container status quickly. Contributions and feedback welcome!
+
