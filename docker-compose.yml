@@ -1,4 +1,4 @@
-# /DO.../helix-hub/docker-compose.yml
+# /DO./helix-hub/docker-compose.yml
 services:
   # zookeeper:
   #   image: confluentinc/cp-zookeeper:7.5.0
