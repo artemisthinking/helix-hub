@@ -1,31 +1,27 @@
 # /home/angel/helix-hub/docker-compose.yml
 services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-    networks:
-      - helix-net
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - SFTP_HOST=sftp-demo
-      - SFTP_PORT=22
-      - SFTP_USER=bank
-      - SFTP_PASS=bankpassword
-      - SFTP_REMOTE_DIR=/incoming
-    depends_on:
-      - postgres
-      - sftp-demo
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./helix-core/data:/app/data
-    networks:
-      - helix-net
-    restart: unless-stopped
-    profiles: ["core"]
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.5.0
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   ports:
+  #     - "2181:2181"
+  #   networks:
+  #     - helix-net
+  #     - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+  #     - SFTP_HOST=sftp-demo
+  #     - SFTP_PORT=22
+  #     - SFTP_USER=bank
+  #     - SFTP_PASS=bankpassword
+  #     - SFTP_REMOTE_DIR=/incoming
+  #   depends_on:
+  #     - postgres
+  #     - sftp-demo
+  #   volumes:
+  #     - ./helix-core/data:/app/data
+  #   restart: unless-stopped
+  #   profiles: ["core"]
   postgres:
     image: postgres:14-alpine
     environment:
@@ -51,29 +47,21 @@ services:
     restart: unless-stopped
     profiles: ["core"]
 
-  # n8n:
-  #   image: n8nio/n8n:1.19.4
-  #   restart: unless-stopped
-  #   postgres:
-  #     image: postgres:14-alpine
-  #     environment:
-  #       POSTGRES_DB: helix
-  #       POSTGRES_USER: helix
-  #       POSTGRES_PASSWORD: helixpass
-  #     volumes:
-  #       - helix_db_data:/var/lib/postgresql/data
-  #       - ./postgres/init:/docker-entrypoint-initdb.d:ro
-  #     networks:
-  #       - helix-net
-  #     restart: unless-stopped
-  #     profiles: ["infra"]
-  #     - GENERIC_TIMEZONE=Europe/Zurich
-  #   volumes:
-  #     - n8n_data:/home/node/.n8n
-  #     - ./podcast-studio:/podcast-studio:ro
-  #   networks:
-  #     - helix-net
-  #   profiles: ["ai"]
+  n8n:
+      image: n8nio/n8n:latest
+      restart: unless-stopped
+      ports:
+        - "5678:5678"
+      environment:
+        - N8N_BASIC_AUTH_ACTIVE=true
+        - N8N_BASIC_AUTH_USER=admin
+        - N8N_BASIC_AUTH_PASSWORD=admin123
+        - N8N_LOG_LEVEL=info
+      volumes:
+        - n8n_data:/home/node/.n8n
+      networks:
+        - helix-net
+      # profiles: ["automation"]
 
   ollama:
     image: ollama/ollama:latest
