@@ -1,4 +1,4 @@
-# <img src="helix-core/data/jose_image.jpg" alt="Chick Logo" width="120" style="border-radius:50%;margin-bottom:10px;" />
+# <img src="helix-core/data/ChuckGuns.png" alt="Chuck Logo" width="120" style="border-radius:50%;margin-bottom:10px;" />
 
 # 🐣 Helix Hub v0.0.1 – "Chuck-Approved HTTPS Milestone"
 
